@@ -1,0 +1,85 @@
+//
+//  ViewController.swift
+//  ImageFeed
+//
+//  Created by Никита Цепляев on 04.05.2024.
+//
+
+import UIKit
+
+class ImageListViewController: UIViewController {
+    
+    lazy var dateFormatter: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.dateStyle = .long
+        formatter.timeStyle = .none
+        formatter.locale = Locale(identifier: "ru_RU")
+        return formatter
+    }()
+    
+    private let photosName: [String] = Array(0..<20).map{ "\($0)" }
+    
+    
+    @IBOutlet private var tableView: UITableView!
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        tableView.rowHeight = 200
+    }
+    
+    func configCell(for cell: ImageListViewCell, indexPath: IndexPath) {
+        let photoName = photosName[indexPath.row]
+        
+        let currentDate = Date()
+        
+        let nonActiveLikeButtonImage = UIImage(named: "NonActiveButton")
+        let activeLikeButtonImage = UIImage(named: "ActiveButton")
+        
+        cell.imageViewOne.image = UIImage(named: photoName)
+        cell.dateLabel.text = dateFormatter.string(from: currentDate)
+        
+        if indexPath.row % 2 == 0 {
+            cell.likeButton.setImage(nonActiveLikeButtonImage, for: .normal)
+        } else {
+            cell.likeButton.setImage(activeLikeButtonImage, for: .normal)
+        }
+    }
+}
+
+extension ImageListViewController: UITableViewDataSource {
+    
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        photosName.count
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: ImageListViewCell.reuseIdentifier, for: indexPath)
+        guard let imageListViewCell = cell as? ImageListViewCell else {
+            return UITableViewCell()
+        }
+        configCell(for: imageListViewCell, indexPath: indexPath)
+        return imageListViewCell
+    }
+    
+    
+}
+
+extension ImageListViewController: UITableViewDelegate {
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+    }
+    
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: ImageListViewCell.reuseIdentifier) as? ImageListViewCell else {
+            return 200
+        }
+        
+        let imageViewWidth = cell.imageViewOne.frame.size.width
+        
+        let photoName = photosName[indexPath.row]
+        guard let imageHeight = UIImage(named: photoName)?.size.height else {return 200}
+        guard let imageWidth = UIImage(named: photoName)?.size.width else {return 200}
+        
+        return 8 + ((imageViewWidth * imageHeight) / imageWidth)
+    }
+}
+
