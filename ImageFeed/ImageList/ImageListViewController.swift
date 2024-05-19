@@ -1,13 +1,8 @@
-//
-//  ViewController.swift
-//  ImageFeed
-//
-//  Created by Никита Цепляев on 04.05.2024.
-//
-
 import UIKit
 
-class ImageListViewController: UIViewController {
+final class ImageListViewController: UIViewController {
+    
+    private let showSingleImageSegueIdentifier = "ShowSingleImage"
     
     lazy var dateFormatter: DateFormatter = {
         let formatter = DateFormatter()
@@ -26,6 +21,8 @@ class ImageListViewController: UIViewController {
         super.viewDidLoad()
         tableView.rowHeight = 200
         tableView.contentInset = UIEdgeInsets(top: 12, left: 0, bottom: 12, right: 0)
+        tableView.dataSource = self
+        tableView.delegate = self
     }
     
     func configCell(for cell: ImageListViewCell, indexPath: IndexPath) {
@@ -43,6 +40,24 @@ class ImageListViewController: UIViewController {
             cell.likeButton.setImage(nonActiveLikeButtonImage, for: .normal)
         } else {
             cell.likeButton.setImage(activeLikeButtonImage, for: .normal)
+        }
+    }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == showSingleImageSegueIdentifier {
+            guard
+                let viewController = segue.destination as? SingleImageViewController,
+                let indexPath = sender as? IndexPath
+            else {
+                assertionFailure("Invalid segue destination") // 4
+                return
+            }
+            
+            let image = UIImage(named: photosName[indexPath.row])
+            
+            viewController.image = image
+        } else {
+            super.prepare(for: segue, sender: sender)
         }
     }
 }
@@ -66,7 +81,9 @@ extension ImageListViewController: UITableViewDataSource {
 }
 
 extension ImageListViewController: UITableViewDelegate {
+    
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        performSegue(withIdentifier: showSingleImageSegueIdentifier, sender: indexPath)
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
