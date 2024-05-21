@@ -25,7 +25,7 @@ final class ImageListViewController: UIViewController {
         tableView.delegate = self
     }
     
-    func configCell(for cell: ImageListViewCell, indexPath: IndexPath) {
+    private func configCell(for cell: ImageListViewCell, indexPath: IndexPath) {
         let photoName = photosName[indexPath.row]
         
         let currentDate = Date()
@@ -49,7 +49,7 @@ final class ImageListViewController: UIViewController {
                 let viewController = segue.destination as? SingleImageViewController,
                 let indexPath = sender as? IndexPath
             else {
-                assertionFailure("Invalid segue destination") // 4
+                assertionFailure("Invalid segue destination")
                 return
             }
             

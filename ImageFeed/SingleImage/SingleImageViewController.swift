@@ -2,7 +2,7 @@ import UIKit
 
 class SingleImageViewController: UIViewController {
     
-    var image: UIImage? {
+    private var image: UIImage? {
         didSet {
             guard isViewLoaded, let image else { return }
 
@@ -45,7 +45,7 @@ class SingleImageViewController: UIViewController {
         present(viewController, animated: true)
     }
     
-    func setEmptyButtonTittle(button: UIButton) {
+    private func setEmptyButtonTittle(button: UIButton) {
         button.setTitle("", for: .normal)
         button.setTitle("", for: .highlighted)
         button.setTitle("", for: .selected)
