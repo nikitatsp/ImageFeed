@@ -107,7 +107,7 @@
                             <constraint firstItem="PCj-ck-0Tw" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="zSa-id-Pjz"/>
                         </constraints>
                     </view>
-                    <tabBarItem key="tabBarItem" title="Item" image="tab_editorial_active" id="I4l-Jx-gjy"/>
+                    <tabBarItem key="tabBarItem" title="" image="tab_editorial_active" id="I4l-Jx-gjy"/>
                     <navigationItem key="navigationItem" id="a9q-Qj-CrG"/>
                     <connections>
                         <outlet property="tableView" destination="PCj-ck-0Tw" id="jG9-gZ-AKn"/>
@@ -205,67 +205,8 @@
                     <view key="view" contentMode="scaleToFill" id="6OH-iB-1wk">
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <subviews>
-                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="MockPhotoProfile" translatesAutoresizingMaskIntoConstraints="NO" id="xMS-1I-g9N">
-                                <rect key="frame" x="16" y="91" width="70" height="70"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="70" id="Tlk-aC-oiu"/>
-                                    <constraint firstAttribute="width" constant="70" id="UNa-jz-FaL"/>
-                                </constraints>
-                            </imageView>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Lyr-Se-7s8">
-                                <rect key="frame" x="335" y="104" width="44" height="44"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="44" id="0QS-tz-erm"/>
-                                    <constraint firstAttribute="width" constant="44" id="yKm-5y-n6s"/>
-                                </constraints>
-                                <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
-                            </button>
-                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ExitButton" translatesAutoresizingMaskIntoConstraints="NO" id="mf1-um-N7c">
-                                <rect key="frame" x="345" y="114" width="24" height="24"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" constant="24" id="Wdy-1D-5Z1"/>
-                                    <constraint firstAttribute="height" constant="24" id="wJp-ob-jQf"/>
-                                </constraints>
-                            </imageView>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Екатерина Новикова" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="fYs-yU-57c" userLabel="Name Label">
-                                <rect key="frame" x="16" y="169" width="234" height="28.666666666666657"/>
-                                <fontDescription key="fontDescription" type="boldSystem" pointSize="23"/>
-                                <color key="textColor" name="YP White"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="@ekaterina_nov" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ctA-wI-nIn" userLabel="NickName Label">
-                                <rect key="frame" x="16" y="205.66666666666666" width="97" height="15.666666666666657"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="13"/>
-                                <color key="textColor" name="YP Gray"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Hello world" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Sh8-Hi-yEC" userLabel="Status Label">
-                                <rect key="frame" x="16" y="229.33333333333334" width="68" height="15.666666666666657"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="13"/>
-                                <color key="textColor" name="YP White"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                        </subviews>
                         <viewLayoutGuide key="safeArea" id="FvF-8x-G9b"/>
                         <color key="backgroundColor" name="YP Black"/>
-                        <constraints>
-                            <constraint firstItem="FvF-8x-G9b" firstAttribute="trailing" relation="lessThanOrEqual" secondItem="fYs-yU-57c" secondAttribute="trailing" constant="143" id="0dt-Vr-Kll"/>
-                            <constraint firstItem="mf1-um-N7c" firstAttribute="centerX" secondItem="Lyr-Se-7s8" secondAttribute="centerX" id="3DC-mF-L4P"/>
-                            <constraint firstItem="mf1-um-N7c" firstAttribute="centerY" secondItem="Lyr-Se-7s8" secondAttribute="centerY" id="Bfw-Fs-Wt9"/>
-                            <constraint firstItem="FvF-8x-G9b" firstAttribute="trailing" secondItem="mf1-um-N7c" secondAttribute="trailing" constant="24" id="DEo-IN-EHN"/>
-                            <constraint firstItem="xMS-1I-g9N" firstAttribute="top" secondItem="FvF-8x-G9b" secondAttribute="top" constant="32" id="DQw-Ig-14q"/>
-                            <constraint firstItem="Lyr-Se-7s8" firstAttribute="centerY" secondItem="xMS-1I-g9N" secondAttribute="centerY" id="Gi2-uQ-ugm"/>
-                            <constraint firstItem="fYs-yU-57c" firstAttribute="top" secondItem="xMS-1I-g9N" secondAttribute="bottom" constant="8" id="Kpj-MK-V5Y"/>
-                            <constraint firstItem="ctA-wI-nIn" firstAttribute="leading" secondItem="FvF-8x-G9b" secondAttribute="leading" constant="16" id="LJF-6n-1Md"/>
-                            <constraint firstItem="fYs-yU-57c" firstAttribute="leading" secondItem="FvF-8x-G9b" secondAttribute="leading" constant="16" id="LOw-9J-epC"/>
-                            <constraint firstItem="FvF-8x-G9b" firstAttribute="trailing" relation="lessThanOrEqual" secondItem="Sh8-Hi-yEC" secondAttribute="trailing" constant="309" id="Ote-YQ-H7O"/>
-                            <constraint firstItem="ctA-wI-nIn" firstAttribute="top" secondItem="fYs-yU-57c" secondAttribute="bottom" constant="8" id="Pc8-rY-1NB"/>
-                            <constraint firstItem="Sh8-Hi-yEC" firstAttribute="leading" secondItem="FvF-8x-G9b" secondAttribute="leading" constant="16" id="UVM-rB-0g8"/>
-                            <constraint firstItem="Sh8-Hi-yEC" firstAttribute="top" secondItem="ctA-wI-nIn" secondAttribute="bottom" constant="8" id="eVt-r5-GJH"/>
-                            <constraint firstItem="xMS-1I-g9N" firstAttribute="leading" secondItem="FvF-8x-G9b" secondAttribute="leading" constant="16" id="gF7-7G-3Z3"/>
-                            <constraint firstItem="FvF-8x-G9b" firstAttribute="trailing" relation="lessThanOrEqual" secondItem="ctA-wI-nIn" secondAttribute="trailing" constant="280" id="zjm-rx-CTL"/>
-                        </constraints>
                     </view>
                     <tabBarItem key="tabBarItem" title="" image="tab_profile_active" id="UOC-87-7yn"/>
                     <navigationItem key="navigationItem" id="XpK-tO-IjP"/>
@@ -301,17 +242,12 @@
         <image name="0" width="1600" height="1059"/>
         <image name="ActiveButton" width="42" height="42"/>
         <image name="Backward" width="24" height="24"/>
-        <image name="ExitButton" width="24" height="24"/>
         <image name="Gradient" width="343" height="30"/>
-        <image name="MockPhotoProfile" width="70" height="70"/>
         <image name="Sharing" width="51" height="51"/>
         <image name="tab_editorial_active" width="75" height="49"/>
         <image name="tab_profile_active" width="75" height="49"/>
         <namedColor name="YP Black">
             <color red="0.10196078431372549" green="0.10588235294117647" blue="0.13333333333333333" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-        </namedColor>
-        <namedColor name="YP Gray">
-            <color red="0.68235294117647061" green="0.68627450980392157" blue="0.70588235294117652" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
         <namedColor name="YP White">
             <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
