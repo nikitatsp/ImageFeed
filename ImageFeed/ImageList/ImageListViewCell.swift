@@ -11,6 +11,4 @@ final class ImageListViewCell: UITableViewCell {
     
     
     static let reuseIdentifier = "ImageListCell"
-    
-    
 }
