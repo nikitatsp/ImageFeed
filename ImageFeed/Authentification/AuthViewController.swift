@@ -1,7 +1,12 @@
 import UIKit
 
-class AuthViewController: UIViewController {
+protocol AuthViewControllerDelegate: AnyObject {
+    func didRecieveBearerToken()
+}
+
+final class AuthViewController: UIViewController {
     
+    weak var delegate: AuthViewControllerDelegate? = nil
     private let loginButton = UIButton()
     private let logoImageView = UIImageView()
     
@@ -68,12 +73,17 @@ extension AuthViewController {
 
 extension AuthViewController: WebViewViewControllerDelegate {
     func webViewViewController(_ vc: WebViewViewController, didAuthenticateWithCode code: String) {
-        OAuth2Service.shared.fetchOAuthToken(code: code) { result in
+        OAuth2Service.shared.fetchOAuthToken(code: code) { [weak self] result in
             switch result{
             case .success(let token):
                 OAuth2TokenStorage.token = token
+//                self?.navigationController?.popViewController(animated: true)
+                self?.delegate?.didRecieveBearerToken()
             case .failure(let error):
                 print(error.localizedDescription)
+                self?.navigationController?.popViewController(animated: true)
+                let alertController = UIAlertController(title: "Ошибка", message: error.localizedDescription, preferredStyle: .alert)
+                let alertAction = UIAlertAction(title: "Попробовать еще раз", style: .default)
             }
         }
     }

@@ -17,6 +17,7 @@ class ProfileViewController: UIViewController {
         configureLabel(label: nickNameLabel, text: "@ekaterina_nov", font: UIFont.systemFont(ofSize: 13), textColor: .ypGray)
         configureLabel(label: statusLabel, text: "Hello, world!", font: UIFont.systemFont(ofSize: 13), textColor: .ypWhite)
         configureButton(button: exitButton, imageButton: UIImage(named: "ExitButton"))
+        setContstraints()
     }
     
     private func configureImageView(imageView: UIImageView, image: UIImage?) {
