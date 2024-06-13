@@ -28,6 +28,10 @@ final class WebViewViewController: UIViewController {
         loadAuthView()
         webView.navigationDelegate = self
     }
+
+    @IBAction func didBackButtonTapped(_ sender: UIBarButtonItem) {
+        delegate?.webViewViewControllerDidCancel(self)
+    }
     
     private func loadAuthView() {
         guard var urlComponents = URLComponents(string: WebViewConstants.unsplashAuthorizeURLString) else {

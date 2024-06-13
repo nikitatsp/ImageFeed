@@ -15,7 +15,6 @@ final class AuthViewController: UIViewController {
         view.backgroundColor = UIColor(named: "YP Black")
         configureLoginButton()
         configureLogoImageView()
-        configureBackButton()
     }
     
     private func configureLogoImageView() {
@@ -28,13 +27,6 @@ final class AuthViewController: UIViewController {
         logoImageView.heightAnchor.constraint(equalToConstant: 60).isActive = true
         logoImageView.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
         logoImageView.centerYAnchor.constraint(equalTo: view.centerYAnchor).isActive = true
-    }
-    
-    private func configureBackButton() {
-        navigationController?.navigationBar.backIndicatorImage = UIImage(named: "Backward Black")
-        navigationController?.navigationBar.backIndicatorTransitionMaskImage = UIImage(named: "Backward Black")
-        navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .plain, target: nil, action: nil)
-        navigationItem.backBarButtonItem?.tintColor = UIColor(named: "YP Black")
     }
     
     private func configureLoginButton() {
@@ -89,6 +81,6 @@ extension AuthViewController: WebViewViewControllerDelegate {
     }
     
     func webViewViewControllerDidCancel(_ vc: WebViewViewController) {
-        
+        navigationController?.popViewController(animated: true)
     }
 }

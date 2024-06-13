@@ -6,7 +6,6 @@
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="22685"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
-        <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
@@ -252,7 +251,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <viewLayoutGuide key="safeArea" id="TFz-6R-mRn"/>
-                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <color key="backgroundColor" name="YP Black"/>
                     </view>
                     <navigationItem key="navigationItem" id="3H7-Wu-TZV"/>
                     <connections>
@@ -274,6 +273,7 @@
                             <wkWebView contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="yoh-tX-Bc3">
                                 <rect key="frame" x="0.0" y="44" width="393" height="808"/>
                                 <color key="backgroundColor" name="YP White"/>
+                                <color key="tintColor" name="YP White"/>
                                 <wkWebViewConfiguration key="configuration">
                                     <audiovisualMediaTypes key="mediaTypesRequiringUserActionForPlayback" none="YES"/>
                                     <wkPreferences key="preferences"/>
@@ -285,7 +285,8 @@
                             </progressView>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="q6e-L7-Khc"/>
-                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <color key="backgroundColor" name="YP White"/>
+                        <color key="tintColor" name="YP White"/>
                         <constraints>
                             <constraint firstItem="zVE-g5-W7n" firstAttribute="leading" secondItem="UHL-qk-eCW" secondAttribute="leading" id="3ZU-yj-xEs"/>
                             <constraint firstItem="yoh-tX-Bc3" firstAttribute="top" secondItem="q6e-L7-Khc" secondAttribute="top" id="5pU-3i-jk7"/>
@@ -296,7 +297,14 @@
                             <constraint firstItem="zVE-g5-W7n" firstAttribute="top" secondItem="q6e-L7-Khc" secondAttribute="top" id="mTa-yG-DY4"/>
                         </constraints>
                     </view>
-                    <navigationItem key="navigationItem" id="YJ2-Nq-LJJ"/>
+                    <navigationItem key="navigationItem" id="YJ2-Nq-LJJ">
+                        <barButtonItem key="leftBarButtonItem" title="Item" image="Backward Black" id="Qh5-g2-S3r">
+                            <color key="tintColor" name="YP Black"/>
+                            <connections>
+                                <action selector="didBackButtonTapped:" destination="3HU-mB-ZvB" id="cks-5J-88R"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
                     <connections>
                         <outlet property="progressView" destination="zVE-g5-W7n" id="DYr-Gz-UwD"/>
                         <outlet property="webView" destination="yoh-tX-Bc3" id="BHe-Pt-dBc"/>
@@ -338,6 +346,7 @@
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="8L1-tq-5dh">
                         <rect key="frame" x="0.0" y="0.0" width="393" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
+                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     </navigationBar>
                     <nil name="viewControllers"/>
                     <connections>
@@ -353,6 +362,7 @@
         <image name="0" width="1600" height="1059"/>
         <image name="ActiveButton" width="42" height="42"/>
         <image name="Backward" width="24" height="24"/>
+        <image name="Backward Black" width="24" height="24"/>
         <image name="Gradient" width="343" height="30"/>
         <image name="Sharing" width="51" height="51"/>
         <image name="StartLogo" width="75" height="78"/>
@@ -364,8 +374,5 @@
         <namedColor name="YP White">
             <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
-        <systemColor name="systemBackgroundColor">
-            <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-        </systemColor>
     </resources>
 </document>
