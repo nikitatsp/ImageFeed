@@ -1,10 +1,10 @@
 import UIKit
 
-final class OAuth2Service {
+struct OAuth2Service {
     static let shared = OAuth2Service()
     private init() {}
     
-    func makeOAuthTokenRequest(code: String) -> URLRequest? {
+    private func makeOAuthTokenRequest(code: String) -> URLRequest? {
         guard var urlComponents = URLComponents(string: "https://unsplash.com/oauth/token") else {
             return nil
         }
@@ -27,31 +27,23 @@ final class OAuth2Service {
         return request
     }
     
-    enum NetworkError: Error, LocalizedError {
-        case noData
-        case codeError(Int)
-        
-        var errorDescription: String? {
-            switch self {
-            case .noData:
-                return "Data is empty"
-            case .codeError(let statusCode):
-                return "Code error: \(statusCode)"
-            }
+    func fetchOAuthToken(code: String, handler: @escaping(_ result: Result<String, Error>) -> Void) {
+        guard let request = makeOAuthTokenRequest(code: code) else {
+            handler(.failure(NetworkError.requestError))
+            return
         }
-    }
-    
-    func fetchOAuthToken(code: String, handler: @escaping(_ result :Result<String, Error>) -> Void) {
-        guard let request = makeOAuthTokenRequest(code: code) else {return}
         
         OAuthTokenResponseBody.shared.decodeData(request: request) { result in
             switch result {
             case .success(let model):
                 let token = model.accessToken
-                print(token)
-                handler(.success(token))
+                DispatchQueue.main.async {
+                    handler(.success(token))
+                }
             case .failure(let error):
-                print(error.localizedDescription)
+                DispatchQueue.main.async {
+                    handler(.failure(error))
+                }
             }
         }
     }

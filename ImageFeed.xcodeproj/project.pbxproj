@@ -15,7 +15,6 @@
 		4A80C6FB2C1A6ABB006968DE /* OAuth2Service.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A80C6FA2C1A6ABB006968DE /* OAuth2Service.swift */; };
 		4A80C6FE2C1A869A006968DE /* NetworkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A80C6FD2C1A869A006968DE /* NetworkManager.swift */; };
 		4A80C7002C1A8821006968DE /* OAuthTokenResponseBody.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A80C6FF2C1A8821006968DE /* OAuthTokenResponseBody.swift */; };
-		4A80C7022C1A8BFF006968DE /* JsonBearerTokenModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A80C7012C1A8BFF006968DE /* JsonBearerTokenModel.swift */; };
 		4A80C7042C1A8F1D006968DE /* OAuth2TokenStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A80C7032C1A8F1D006968DE /* OAuth2TokenStorage.swift */; };
 		4A8249C52BE689CA0058FACF /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A8249C42BE689CA0058FACF /* AppDelegate.swift */; };
 		4A8249C72BE689CA0058FACF /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A8249C62BE689CA0058FACF /* SceneDelegate.swift */; };
@@ -35,7 +34,6 @@
 		4A80C6FA2C1A6ABB006968DE /* OAuth2Service.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OAuth2Service.swift; sourceTree = "<group>"; };
 		4A80C6FD2C1A869A006968DE /* NetworkManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkManager.swift; sourceTree = "<group>"; };
 		4A80C6FF2C1A8821006968DE /* OAuthTokenResponseBody.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OAuthTokenResponseBody.swift; sourceTree = "<group>"; };
-		4A80C7012C1A8BFF006968DE /* JsonBearerTokenModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JsonBearerTokenModel.swift; sourceTree = "<group>"; };
 		4A80C7032C1A8F1D006968DE /* OAuth2TokenStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OAuth2TokenStorage.swift; sourceTree = "<group>"; };
 		4A8249C12BE689CA0058FACF /* ImageFeed.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ImageFeed.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		4A8249C42BE689CA0058FACF /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -87,13 +85,10 @@
 		4A4C00BD2C112B0700BE6502 /* Authentification */ = {
 			isa = PBXGroup;
 			children = (
+				4AAD87CA2C1B5BEE004AB278 /* OAuth2 */,
+				4A67AEA32C0D182900DB0310 /* Constants.swift */,
 				4A4C00C02C112BE500BE6502 /* AuthViewController.swift */,
 				4A4C00C22C11DB8200BE6502 /* WebViewViewController.swift */,
-				4A67AEA32C0D182900DB0310 /* Constants.swift */,
-				4A80C6FA2C1A6ABB006968DE /* OAuth2Service.swift */,
-				4A80C6FF2C1A8821006968DE /* OAuthTokenResponseBody.swift */,
-				4A80C7012C1A8BFF006968DE /* JsonBearerTokenModel.swift */,
-				4A80C7032C1A8F1D006968DE /* OAuth2TokenStorage.swift */,
 			);
 			path = Authentification;
 			sourceTree = "<group>";
@@ -139,11 +134,21 @@
 			path = ImageFeed;
 			sourceTree = "<group>";
 		};
+		4AAD87CA2C1B5BEE004AB278 /* OAuth2 */ = {
+			isa = PBXGroup;
+			children = (
+				4A80C6FA2C1A6ABB006968DE /* OAuth2Service.swift */,
+				4A80C6FF2C1A8821006968DE /* OAuthTokenResponseBody.swift */,
+				4A80C7032C1A8F1D006968DE /* OAuth2TokenStorage.swift */,
+			);
+			path = OAuth2;
+			sourceTree = "<group>";
+		};
 		4AB0ED8B2BE7CA3400706CCC /* ImageList */ = {
 			isa = PBXGroup;
 			children = (
-				4AB0ED892BE7CA2D00706CCC /* ImageListViewCell.swift */,
 				4A8249C82BE689CA0058FACF /* ImageListViewController.swift */,
+				4AB0ED892BE7CA2D00706CCC /* ImageListViewCell.swift */,
 			);
 			path = ImageList;
 			sourceTree = "<group>";
@@ -219,7 +224,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				4A80C7022C1A8BFF006968DE /* JsonBearerTokenModel.swift in Sources */,
 				4AB0ED8A2BE7CA2D00706CCC /* ImageListViewCell.swift in Sources */,
 				4A8249C92BE689CA0058FACF /* ImageListViewController.swift in Sources */,
 				4A80C7002C1A8821006968DE /* OAuthTokenResponseBody.swift in Sources */,

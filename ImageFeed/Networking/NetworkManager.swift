@@ -1,22 +1,25 @@
 import UIKit
 
+enum NetworkError: Error, LocalizedError {
+    case noData
+    case codeError(Int)
+    case requestError
+    
+    var errorDescription: String? {
+        switch self {
+        case .noData:
+            return "Data is empty"
+        case .codeError(let statusCode):
+            return "Code error: \(statusCode)"
+        case .requestError:
+            return "Invalid request"
+        }
+    }
+}
+
 struct NetworkManager {
     static let shared = NetworkManager()
     private init() {}
-    
-    private enum NetworkError: Error, LocalizedError {
-        case noData
-        case codeError(Int)
-        
-        var errorDescription: String? {
-            switch self {
-            case .noData:
-                return "Data is empty"
-            case .codeError(let statusCode):
-                return "Code error: \(statusCode)"
-            }
-        }
-    }
     
     func fetch(request: URLRequest, completion: @escaping(_ result: Result<Data, Error>) -> Void) {
         
@@ -31,13 +34,12 @@ struct NetworkManager {
                 completion(.failure(NetworkError.codeError(response.statusCode)))
                 return
             }
-            
+
             if let data {
                 completion(.success(data))
             } else {
                 completion(.failure(NetworkError.noData))
             }
-            
         }.resume()
     }
 }

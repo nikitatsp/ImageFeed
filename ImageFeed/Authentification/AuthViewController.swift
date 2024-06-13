@@ -2,8 +2,8 @@ import UIKit
 
 class AuthViewController: UIViewController {
     
-    let loginButton = UIButton()
-    let logoImageView = UIImageView()
+    private let loginButton = UIButton()
+    private let logoImageView = UIImageView()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -11,29 +11,6 @@ class AuthViewController: UIViewController {
         configureLoginButton()
         configureLogoImageView()
         configureBackButton()
-    }
-    
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        guard segue.identifier == "ShowWebView" else {return}
-        guard let destinationVC = segue.destination as? WebViewViewController else {return}
-        destinationVC.delegate = self
-    }
-    
-    private func configureLoginButton() {
-        loginButton.addTarget(self, action: #selector(didTappedLoginButton), for: .touchUpInside)
-        loginButton.backgroundColor = UIColor.white
-        loginButton.setTitle("Войти", for: .normal)
-        loginButton.setTitleColor(UIColor(named: "YP Black"), for: .normal)
-        loginButton.titleLabel?.font = UIFont.systemFont(ofSize: 17, weight: .bold)
-        loginButton.layer.cornerRadius = 16
-        loginButton.layer.masksToBounds = true
-        view.addSubview(loginButton)
-        
-        loginButton.translatesAutoresizingMaskIntoConstraints = false
-        loginButton.heightAnchor.constraint(equalToConstant: 48).isActive = true
-        loginButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16).isActive = true
-        loginButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16).isActive = true
-        loginButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -90).isActive = true
     }
     
     private func configureLogoImageView() {
@@ -55,16 +32,44 @@ class AuthViewController: UIViewController {
         navigationItem.backBarButtonItem?.tintColor = UIColor(named: "YP Black")
     }
     
+    private func configureLoginButton() {
+        loginButton.addTarget(self, action: #selector(didTappedLoginButton), for: .touchUpInside)
+        loginButton.backgroundColor = UIColor.white
+        loginButton.setTitle("Войти", for: .normal)
+        loginButton.setTitleColor(UIColor(named: "YP Black"), for: .normal)
+        loginButton.titleLabel?.font = UIFont.systemFont(ofSize: 17, weight: .bold)
+        loginButton.layer.cornerRadius = 16
+        loginButton.layer.masksToBounds = true
+        view.addSubview(loginButton)
+        
+        loginButton.translatesAutoresizingMaskIntoConstraints = false
+        loginButton.heightAnchor.constraint(equalToConstant: 48).isActive = true
+        loginButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16).isActive = true
+        loginButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16).isActive = true
+        loginButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -90).isActive = true
+    }
+    
     @objc private func didTappedLoginButton() {
         performSegue(withIdentifier: "ShowWebView", sender: nil)
     }
 }
 
+//MARK: - SegueToWebView
+
+extension AuthViewController {
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        guard segue.identifier == "ShowWebView" else {return}
+        guard let destinationVC = segue.destination as? WebViewViewController else {return}
+        destinationVC.delegate = self
+    }
+}
+
+//MARK: - WebViewControllerDelegate
+
 extension AuthViewController: WebViewViewControllerDelegate {
     func webViewViewController(_ vc: WebViewViewController, didAuthenticateWithCode code: String) {
         OAuth2Service.shared.fetchOAuthToken(code: code) { result in
             switch result{
-                
             case .success(let token):
                 OAuth2TokenStorage.token = token
             case .failure(let error):

@@ -1,39 +1,32 @@
 import UIKit
 import WebKit
 
+//MARK: - WebViewConstants
+
+enum WebViewConstants {
+    static let unsplashAuthorizeURLString = "https://unsplash.com/oauth/authorize"
+}
+
+//MARK: - WebViewViewControllerDelegateProtocol
+
 protocol WebViewViewControllerDelegate: AnyObject {
     func webViewViewController(_ vc: WebViewViewController, didAuthenticateWithCode code: String)
     func webViewViewControllerDidCancel(_ vc: WebViewViewController)
 }
 
+//MARK: - WebViewViewController
+
 final class WebViewViewController: UIViewController {
     
-    
-    @IBOutlet weak private var progressView: UIProgressView!
+    @IBOutlet private weak var progressView: UIProgressView!
+    @IBOutlet private weak var webView: WKWebView!
     
     weak var delegate: AuthViewController? = nil
-    @IBOutlet private weak var webView: WKWebView!
-    let segueIdentifier = "ShowWebView"
     
     override func viewDidLoad() {
         super.viewDidLoad()
         loadAuthView()
         webView.navigationDelegate = self
-    }
-    
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        
-        webView.addObserver(
-            self,
-            forKeyPath: #keyPath(WKWebView.estimatedProgress),
-            options: .new,
-            context: nil)
-    }
-    
-    override func viewWillDisappear(_ animated: Bool) {
-        super.viewWillDisappear(animated)
-        webView.removeObserver(self, forKeyPath: #keyPath(WKWebView.estimatedProgress), context: nil)
     }
     
     private func loadAuthView() {
@@ -55,19 +48,23 @@ final class WebViewViewController: UIViewController {
         let request = URLRequest(url: url)
         webView.load(request)
     }
+}
+
+//MARK: - KVO
+
+extension WebViewViewController {
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        webView.addObserver(
+            self,
+            forKeyPath: #keyPath(WKWebView.estimatedProgress),
+            options: .new,
+            context: nil)
+    }
     
-    private func code(from navigationAction: WKNavigationAction) -> String? {
-        if
-            let url = navigationAction.request.url,
-            let urlComponents = URLComponents(string: url.absoluteString),
-            urlComponents.path == "/oauth/authorize/native",
-            let items = urlComponents.queryItems,
-            let codeItem = items.first(where: { $0.name == "code" })
-        {
-            return codeItem.value
-        } else {
-            return nil
-        }
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        webView.removeObserver(self, forKeyPath: #keyPath(WKWebView.estimatedProgress), context: nil)
     }
     
     override func observeValue(
@@ -89,6 +86,8 @@ final class WebViewViewController: UIViewController {
     }
 }
 
+//MARK: - WKNavigationDelegate
+
 extension WebViewViewController: WKNavigationDelegate {
     func webView(
         _ webView: WKWebView,
@@ -102,8 +101,18 @@ extension WebViewViewController: WKNavigationDelegate {
             decisionHandler(.allow)
         }
     }
-}
-
-enum WebViewConstants {
-    static let unsplashAuthorizeURLString = "https://unsplash.com/oauth/authorize"
+    
+    private func code(from navigationAction: WKNavigationAction) -> String? {
+        if
+            let url = navigationAction.request.url,
+            let urlComponents = URLComponents(string: url.absoluteString),
+            urlComponents.path == "/oauth/authorize/native",
+            let items = urlComponents.queryItems,
+            let codeItem = items.first(where: { $0.name == "code" })
+        {
+            return codeItem.value
+        } else {
+            return nil
+        }
+    }
 }
