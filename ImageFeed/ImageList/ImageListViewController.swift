@@ -1,8 +1,12 @@
 import UIKit
 
 final class ImageListViewController: UIViewController {
+
+    @IBOutlet private var tableView: UITableView!
     
     private let showSingleImageSegueIdentifier = "ShowSingleImage"
+    
+    private let photosName: [String] = Array(0..<20).map{ "\($0)" }
     
     lazy var dateFormatter: DateFormatter = {
         let formatter = DateFormatter()
@@ -12,11 +16,6 @@ final class ImageListViewController: UIViewController {
         return formatter
     }()
     
-    private let photosName: [String] = Array(0..<20).map{ "\($0)" }
-    
-    
-    @IBOutlet private var tableView: UITableView!
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         tableView.rowHeight = 200
@@ -25,6 +24,12 @@ final class ImageListViewController: UIViewController {
         tableView.delegate = self
     }
     
+    
+}
+
+//MARK: - ConfigureCell
+
+extension ImageListViewController {
     private func configCell(for cell: ImageListViewCell, indexPath: IndexPath) {
         let photoName = photosName[indexPath.row]
         
@@ -43,6 +48,12 @@ final class ImageListViewController: UIViewController {
         }
     }
     
+    
+}
+
+//MARK: - SegueToSingleImage
+
+extension ImageListViewController {
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == showSingleImageSegueIdentifier {
             guard
@@ -62,6 +73,8 @@ final class ImageListViewController: UIViewController {
     }
 }
 
+//MARK: - UITableViewDataSource
+
 extension ImageListViewController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -80,6 +93,8 @@ extension ImageListViewController: UITableViewDataSource {
     
 }
 
+//MARK: - UITableViewDelegate
+
 extension ImageListViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
@@ -92,7 +107,6 @@ extension ImageListViewController: UITableViewDelegate {
         }
         
         let imageViewWidth = cell.imageViewOne.frame.size.width
-        
         let photoName = photosName[indexPath.row]
         guard let imageHeight = UIImage(named: photoName)?.size.height else {return 200}
         guard let imageWidth = UIImage(named: photoName)?.size.width else {return 200}
