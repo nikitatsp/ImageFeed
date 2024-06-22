@@ -1,4 +1,5 @@
 import UIKit
+import Kingfisher
 
 class ProfileViewController: UIViewController {
     
@@ -8,25 +9,39 @@ class ProfileViewController: UIViewController {
     private let statusLabel = UILabel()
     private let exitButton = UIButton()
     
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        configureImageView(imageView: imageProfileView, image: UIImage(named: "MockPhotoProfile"))
-        configureLabel(label: nameLabel, text: "Екатерина Новикова", font: UIFont.systemFont(ofSize: 23, weight: .bold), textColor: .ypWhite)
-        configureLabel(label: nickNameLabel, text: "@ekaterina_nov", font: UIFont.systemFont(ofSize: 13), textColor: .ypGray)
-        configureLabel(label: statusLabel, text: "Hello, world!", font: UIFont.systemFont(ofSize: 13), textColor: .ypWhite)
+        guard let profile = ProfileResult.shared.profile else {return}
+        configureImageView(imageView: imageProfileView, image: nil, imageUrl: profile.profileImage.large)
+        configureLabel(label: nameLabel, text: profile.name, font: UIFont.systemFont(ofSize: 23, weight: .bold), textColor: .ypWhite)
+        configureLabel(label: nickNameLabel, text: "@\(profile.username)", font: UIFont.systemFont(ofSize: 13), textColor: .ypGray)
+        configureLabel(label: statusLabel, text: profile.bio, font: UIFont.systemFont(ofSize: 13), textColor: .ypWhite)
         configureButton(button: exitButton, imageButton: UIImage(named: "ExitButton"))
         setContstraints()
     }
     
-    private func configureImageView(imageView: UIImageView, image: UIImage?) {
-        imageView.image = image
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        imageProfileView.layer.cornerRadius = imageProfileView.bounds.size.width / 2
+        imageProfileView.clipsToBounds = true
+    }
+    
+    private func configureImageView(imageView: UIImageView, image: UIImage?, imageUrl: String?) {
+        
+        if let image {
+            imageView.image = image
+        } else if let imageUrl {
+            let url = URL(string: imageUrl)
+            imageView.kf.setImage(with: url)
+        }
+        
         view.addSubview(imageView)
         imageView.translatesAutoresizingMaskIntoConstraints = false
     }
     
-    private func configureLabel(label: UILabel, text: String, font: UIFont, textColor: UIColor) {
+    private func configureLabel(label: UILabel, text: String?, font: UIFont, textColor: UIColor) {
         label.text = text
         label.font = font
         label.textColor = textColor
@@ -63,5 +78,9 @@ class ProfileViewController: UIViewController {
             exitButton.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -24),
             exitButton.centerYAnchor.constraint(equalTo: imageProfileView.centerYAnchor)
         ])
+    }
+    
+    private func setCornerRadius(element: UIView) {
+        
     }
 }

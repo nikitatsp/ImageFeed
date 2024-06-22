@@ -8,7 +8,8 @@ final class SplashViewController: UIViewController, AuthViewControllerDelegate {
         if OAuth2TokenStorage.token.isEmpty {
             performSegue(withIdentifier: "showAuthorization", sender: nil)
         } else {
-            switchToTabBarController()
+            ProfileResult.shared.delegate = self
+            ProfileResult.shared.fetchProfile()
         }
     }
 }
@@ -21,7 +22,7 @@ extension SplashViewController {
             assertionFailure("Invalid window configuration")
             return
         }
-
+        
         let tabBarController = UIStoryboard(name: "Main", bundle: .main)
             .instantiateViewController(withIdentifier: "TabBarViewController")
         
@@ -47,6 +48,15 @@ extension SplashViewController {
 extension SplashViewController {
     func didRecieveBearerToken() {
         dismiss(animated: true)
+        ProfileResult.shared.delegate = self
+        ProfileResult.shared.fetchProfile()
+    }
+}
+
+//MARK: - ProfileResultDelegate
+
+extension SplashViewController: ProfileResultDelegate {
+    func didRecieveProfile() {
         switchToTabBarController()
     }
 }
