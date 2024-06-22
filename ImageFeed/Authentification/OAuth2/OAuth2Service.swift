@@ -1,8 +1,10 @@
 import UIKit
 
-struct OAuth2Service {
+final class OAuth2Service {
     static let shared = OAuth2Service()
     private init() {}
+    private var lastCode: String?
+    private var task: URLSessionTask?
     
     private func makeOAuthTokenRequest(code: String) -> URLRequest? {
         guard var urlComponents = URLComponents(string: "https://unsplash.com/oauth/token") else {
@@ -28,24 +30,45 @@ struct OAuth2Service {
     }
     
     func fetchOAuthToken(code: String, handler: @escaping(_ result: Result<String, Error>) -> Void) {
+        assert(Thread.isMainThread)
+        
+        if task != nil {
+            if code == lastCode {
+                return
+            } else {
+                task?.cancel()
+            }
+        }
+        
+        lastCode = code
         guard let request = makeOAuthTokenRequest(code: code) else {
             handler(.failure(NetworkError.requestError))
             return
         }
         
-        OAuthTokenResponseBody.shared.decodeData(request: request) { result in
+        task = NetworkManager.shared.fetch(request: request, completion: { result in
             switch result {
-            case .success(let model):
-                let token = model.accessToken
-                DispatchQueue.main.async {
-                    handler(.success(token))
+            case .success(let data):
+                do {
+                    let model = try JSONDecoder().decode(JsonBearerTokenModel.self, from: data)
+                    let token = model.accessToken
+                    DispatchQueue.main.async {
+                        handler(.success(token))
+                    }
+                } catch {
+                    DispatchQueue.main.async {
+                        handler(.failure(error))
+                    }
                 }
             case .failure(let error):
                 DispatchQueue.main.async {
                     handler(.failure(error))
                 }
             }
-        }
+        })
+        task?.resume()
     }
 }
+
+
 

@@ -21,9 +21,9 @@ struct NetworkManager {
     static let shared = NetworkManager()
     private init() {}
     
-    func fetch(request: URLRequest, completion: @escaping(_ result: Result<Data, Error>) -> Void) {
+    func fetch(request: URLRequest, completion: @escaping(_ result: Result<Data, Error>) -> Void) -> URLSessionTask {
         
-        URLSession.shared.dataTask(with: request) { data, response, error in
+        let task = URLSession.shared.dataTask(with: request) { data, response, error in
             if let error {
                 completion(.failure(error))
                 return
@@ -40,6 +40,7 @@ struct NetworkManager {
             } else {
                 completion(.failure(NetworkError.noData))
             }
-        }.resume()
+        }
+        return task
     }
 }

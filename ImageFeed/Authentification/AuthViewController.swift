@@ -1,4 +1,5 @@
 import UIKit
+import ProgressHUD
 
 protocol AuthViewControllerDelegate: AnyObject {
     func didRecieveBearerToken()
@@ -65,17 +66,26 @@ extension AuthViewController {
 
 extension AuthViewController: WebViewViewControllerDelegate {
     func webViewViewController(_ vc: WebViewViewController, didAuthenticateWithCode code: String) {
+        navigationController?.popViewController(animated: true)
+        loginButton.isEnabled = false
+        ProgressHUD.animate()
         OAuth2Service.shared.fetchOAuthToken(code: code) { [weak self] result in
             switch result{
             case .success(let token):
+                print(token)
                 OAuth2TokenStorage.token = token
-//                self?.navigationController?.popViewController(animated: true)
+                ProgressHUD.dismiss()
+                self?.loginButton.isEnabled = true
                 self?.delegate?.didRecieveBearerToken()
             case .failure(let error):
                 print(error.localizedDescription)
-                self?.navigationController?.popViewController(animated: true)
+                ProgressHUD.dismiss()
                 let alertController = UIAlertController(title: "Ошибка", message: error.localizedDescription, preferredStyle: .alert)
-                let alertAction = UIAlertAction(title: "Попробовать еще раз", style: .default)
+                let alertAction = UIAlertAction(title: "Попробовать еще раз", style: .default) {_ in 
+                    self?.loginButton.isEnabled = true
+                }
+                alertController.addAction(alertAction)
+                self?.present(alertController, animated: true)
             }
         }
     }
