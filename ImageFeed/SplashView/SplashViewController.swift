@@ -1,16 +1,38 @@
 import UIKit
 
 final class SplashViewController: UIViewController, AuthViewControllerDelegate {
+    private let imageView = UIImageView()
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        view.backgroundColor = UIColor(named: "YP Black")
+        configureImageView(imageView: imageView)
+        setConstraints()
+    }
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         
-        if OAuth2TokenStorage.token.isEmpty {
-            performSegue(withIdentifier: "showAuthorization", sender: nil)
+        if OAuth2TokenStorage.token == "" {
+            presentAuthViewController()
         } else {
             ProfileResult.shared.delegate = self
             ProfileResult.shared.fetchProfile()
         }
+    }
+    
+    func configureImageView(imageView: UIImageView) {
+        let image = UIImage(named: "StartLogo")
+        imageView.image = image
+        view.addSubview(imageView)
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+    }
+    
+    func setConstraints() {
+        NSLayoutConstraint.activate([
+            imageView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            imageView.centerYAnchor.constraint(equalTo: view.centerYAnchor)
+        ])
     }
 }
 
@@ -33,13 +55,10 @@ extension SplashViewController {
 //MARK: - SegueToAuth
 
 extension SplashViewController {
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if segue.identifier == "showAuthorization" {
-            if let navController = segue.destination as? UINavigationController,
-               let authVC = navController.topViewController as? AuthViewController {
-                authVC.delegate = self
-            }
-        }
+    func presentAuthViewController() {
+        let navigationController = NavigationController(rootViewController: AuthViewController())
+        navigationController.modalPresentationStyle = .fullScreen
+        present(navigationController, animated: true)
     }
 }
 

@@ -12,7 +12,7 @@ class ProfileViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        view.backgroundColor = UIColor(named: "YP Black")
         guard let profile = ProfileResult.shared.profile else {return}
         configureImageView(imageView: imageProfileView, image: nil, imageUrl: profile.profileImage.large)
         configureLabel(label: nameLabel, text: profile.name, font: UIFont.systemFont(ofSize: 23, weight: .bold), textColor: .ypWhite)

@@ -48,7 +48,9 @@ final class AuthViewController: UIViewController {
     }
     
     @objc private func didTappedLoginButton() {
-        performSegue(withIdentifier: "ShowWebView", sender: nil)
+        let webViewController = WebViewViewController()
+        webViewController.delegate = self
+        navigationController?.pushViewController(webViewController, animated: true)
     }
 }
 
@@ -72,11 +74,10 @@ extension AuthViewController: WebViewViewControllerDelegate {
         OAuth2Service.shared.fetchOAuthToken(code: code) { [weak self] result in
             switch result{
             case .success(let token):
-                print(token)
                 OAuth2TokenStorage.token = token
                 ProgressHUD.dismiss()
-                self?.loginButton.isEnabled = true
                 self?.delegate?.didRecieveBearerToken()
+                self?.loginButton.isEnabled = true
             case .failure(let error):
                 print(error.localizedDescription)
                 ProgressHUD.dismiss()
@@ -90,7 +91,7 @@ extension AuthViewController: WebViewViewControllerDelegate {
         }
     }
     
-    func webViewViewControllerDidCancel(_ vc: WebViewViewController) {
+    func webViewViewControllerDidCancel() {
         navigationController?.popViewController(animated: true)
     }
 }
