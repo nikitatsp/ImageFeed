@@ -1,10 +1,11 @@
 import UIKit
 
 class SingleImageViewController: UIViewController {
-
-    @IBOutlet private var imageView: UIImageView!
-    @IBOutlet weak var scrollView: UIScrollView!
-    @IBOutlet weak var backwardButton: UIButton!
+    
+    private var scrollView = UIScrollView()
+    private var imageView = UIImageView()
+    private var backwardButton = UIButton()
+    private var shareButton = UIButton()
     
     var image: UIImage? {
         didSet {
@@ -18,37 +19,77 @@ class SingleImageViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        view.backgroundColor = UIColor(named: "YP Black")
         guard let image else {return}
-        imageView.image = image
-        imageView.frame.size = image.size
-        setEmptyButtonTittle(button: backwardButton)
         
-        scrollView.minimumZoomScale = 0.1
-        scrollView.maximumZoomScale = 1.25
+        configureScrollView()
+        configureImageView(image: image)
+        configureBackwardButton()
+        configureShareButton()
+        setConstraints()
         
         rescaleAndCenterImageInScrollView(image: image)
     }
     
+    private func configureScrollView() {
+        scrollView.backgroundColor = UIColor(named: "YP Black")
+        scrollView.delegate = self
+        scrollView.minimumZoomScale = 0.1
+        scrollView.maximumZoomScale = 1.25
+        view.addSubview(scrollView)
+        scrollView.translatesAutoresizingMaskIntoConstraints = false
+    }
     
-    @IBAction func backwardButtonTapped(_ sender: Any) {
+    private func configureImageView(image: UIImage) {
+        imageView.image = image
+        imageView.frame.size = image.size
+        imageView.contentMode = .scaleAspectFit
+        imageView.frame.origin = CGPoint(x: 0, y: 0)
+        scrollView.addSubview(imageView)
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+    }
+    
+    private func configureBackwardButton() {
+        backwardButton.setImage(UIImage(named: "Backward"), for: .normal)
+        backwardButton.addTarget(self, action: #selector(backwardButtonTapped), for: .touchUpInside)
+        view.addSubview(backwardButton)
+        backwardButton.translatesAutoresizingMaskIntoConstraints = false
+    }
+    
+    private func configureShareButton() {
+        shareButton.setImage(UIImage(named: "Sharing"), for: .normal)
+        shareButton.addTarget(self, action: #selector(didTapShareButton), for: .touchUpInside)
+        view.addSubview(shareButton)
+        shareButton.translatesAutoresizingMaskIntoConstraints = false
+    }
+    
+    private func setConstraints() {
+        NSLayoutConstraint.activate([
+            scrollView.topAnchor.constraint(equalTo: view.topAnchor),
+            scrollView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+            scrollView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            scrollView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            
+            backwardButton.widthAnchor.constraint(equalToConstant: 44),
+            backwardButton.heightAnchor.constraint(equalToConstant: 44),
+            backwardButton.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 11),
+            backwardButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 9),
+            
+            shareButton.widthAnchor.constraint(equalToConstant: 50),
+            shareButton.heightAnchor.constraint(equalToConstant: 50),
+            shareButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -17),
+            shareButton.centerXAnchor.constraint(equalTo: view.centerXAnchor)
+        ])
+    }
+    
+    @objc func backwardButtonTapped() {
         dismiss(animated: true)
     }
     
-    @IBAction func didTapShareButton(_ sender: Any) {
+    @objc func didTapShareButton(_ sender: Any) {
         guard let image else {return}
         let viewController = UIActivityViewController(activityItems: [image], applicationActivities: nil)
         present(viewController, animated: true)
-    }
-}
-
-//MARK: - setEmptyButtonTittle
-
-extension SingleImageViewController {
-    private func setEmptyButtonTittle(button: UIButton) {
-        button.setTitle("", for: .normal)
-        button.setTitle("", for: .highlighted)
-        button.setTitle("", for: .selected)
-        button.setTitle("", for: .disabled)
     }
 }
 

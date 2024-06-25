@@ -69,28 +69,6 @@ extension ImageListViewController {
     
 }
 
-//MARK: - SegueToSingleImage
-
-//extension ImageListViewController {
-//    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-//        if segue.identifier == showSingleImageSegueIdentifier {
-//            guard
-//                let viewController = segue.destination as? SingleImageViewController,
-//                let indexPath = sender as? IndexPath
-//            else {
-//                assertionFailure("Invalid segue destination")
-//                return
-//            }
-//            
-//            let image = UIImage(named: photosName[indexPath.row])
-//            
-//            viewController.image = image
-//        } else {
-//            super.prepare(for: segue, sender: sender)
-//        }
-//    }
-//}
-
 //MARK: - UITableViewDataSource
 
 extension ImageListViewController: UITableViewDataSource {
@@ -116,20 +94,23 @@ extension ImageListViewController: UITableViewDataSource {
 extension ImageListViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-//       performSegue(withIdentifier: showSingleImageSegueIdentifier, sender: indexPath)
+        tableView.deselectRow(at: indexPath, animated: true)
+        let singleImageVC = SingleImageViewController()
+        singleImageVC.image = UIImage(named: photosName[indexPath.row])
+        singleImageVC.modalPresentationStyle = .fullScreen
+        present(singleImageVC, animated: true)
     }
     
-//    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-//        guard let cell = tableView.dequeueReusableCell(withIdentifier: ImageListViewCell.reuseIdentifier) as? ImageListViewCell else {
-//            return 200
-//        }
-//        
-//        let imageViewWidth = cell.imageViewOne.frame.size.width
-//        let photoName = photosName[indexPath.row]
-//        guard let imageHeight = UIImage(named: photoName)?.size.height else {return 200}
-//        guard let imageWidth = UIImage(named: photoName)?.size.width else {return 200}
-//        
-//        return 8 + ((imageViewWidth * imageHeight) / imageWidth)
-//    }
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        guard let image = UIImage(named: photosName[indexPath.row]) else { return 0 }
+        
+        let insets = UIEdgeInsets(top: 4, left: 16, bottom: 4, right: 16)
+        let imageViewWidth = tableView.bounds.width - insets.left - insets.right
+        let imageWidth = image.size.width
+        let scale = imageViewWidth / imageWidth
+        let cellHeight = image.size.height * scale + insets.top + insets.bottom
+        return cellHeight
+    }
 }
+
 

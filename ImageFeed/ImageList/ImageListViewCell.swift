@@ -20,6 +20,7 @@ final class ImageListViewCell: UITableViewCell {
     
     required init?(coder: NSCoder) {
         super.init(coder: coder)
+        contentView.backgroundColor = .clear
         configureImageViewOne()
         configureLikeButton()
         configureFadeView()
@@ -73,8 +74,8 @@ final class ImageListViewCell: UITableViewCell {
             fadeView.trailingAnchor.constraint(equalTo: imageViewOne.trailingAnchor),
             fadeView.heightAnchor.constraint(equalToConstant: 30),
             
-            dateLabel.bottomAnchor.constraint(equalTo: imageViewOne.bottomAnchor, constant: -4),
-            dateLabel.leadingAnchor.constraint(equalTo: imageViewOne.leadingAnchor, constant: 4)
+            dateLabel.bottomAnchor.constraint(equalTo: imageViewOne.bottomAnchor, constant: -8),
+            dateLabel.leadingAnchor.constraint(equalTo: imageViewOne.leadingAnchor, constant: 8)
         ])
     }
 }
