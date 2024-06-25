@@ -45,8 +45,18 @@ extension SplashViewController {
             return
         }
         
-        let tabBarController = UIStoryboard(name: "Main", bundle: .main)
-            .instantiateViewController(withIdentifier: "TabBarViewController")
+        let tabBarController = UITabBarController()
+        
+        let imageListVC = ImageListViewController()
+        let profileVC = ProfileViewController()
+        imageListVC.tabBarItem = UITabBarItem(title: "", image: UIImage(named: "tab_editorial_active"), selectedImage: nil)
+        profileVC.tabBarItem = UITabBarItem(title: "",image: UIImage(named: "tab_profile_active"),selectedImage: nil)
+        
+        tabBarController.tabBar.tintColor = UIColor(named: "YP White")
+        tabBarController.tabBar.barTintColor = UIColor(named: "YP Black")
+        tabBarController.tabBar.backgroundColor = UIColor(named: "YP Black")
+        tabBarController.tabBar.isTranslucent = false
+        tabBarController.viewControllers = [imageListVC, profileVC]
         
         window.rootViewController = tabBarController
     }
@@ -56,7 +66,9 @@ extension SplashViewController {
 
 extension SplashViewController {
     func presentAuthViewController() {
-        let navigationController = NavigationController(rootViewController: AuthViewController())
+        let authVC = AuthViewController()
+        authVC.delegate = self
+        let navigationController = UINavigationController(rootViewController: authVC)
         navigationController.modalPresentationStyle = .fullScreen
         present(navigationController, animated: true)
     }

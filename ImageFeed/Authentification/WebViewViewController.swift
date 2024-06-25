@@ -32,14 +32,8 @@ final class WebViewViewController: UIViewController {
         setConstraints()
         loadAuthView()
         webView.navigationDelegate = self
+        observeProgress()
         
-        estimatedProgressObservation = webView.observe(
-            \.estimatedProgress,
-             options: [],
-             changeHandler: { [weak self] _, _ in
-                 guard let self = self else { return }
-                 self.updateProgress()
-             })
     }
     
     private func loadAuthView() {
@@ -103,6 +97,16 @@ final class WebViewViewController: UIViewController {
 //MARK: - KVO
 
 extension WebViewViewController {
+    private func observeProgress() {
+        estimatedProgressObservation = webView.observe(
+            \.estimatedProgress,
+             options: [],
+             changeHandler: { [weak self] _, _ in
+                 guard let self = self else { return }
+                 self.updateProgress()
+             })
+    }
+    
     private func updateProgress() {
         progressView.progress = Float(webView.estimatedProgress)
         progressView.isHidden = fabs(webView.estimatedProgress - 1.0) <= 0.0001

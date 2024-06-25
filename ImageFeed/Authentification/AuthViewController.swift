@@ -7,7 +7,7 @@ protocol AuthViewControllerDelegate: AnyObject {
 
 final class AuthViewController: UIViewController {
     
-    weak var delegate: AuthViewControllerDelegate? = nil
+    weak var delegate: AuthViewControllerDelegate?
     private let loginButton = UIButton()
     private let logoImageView = UIImageView()
     
@@ -51,16 +51,6 @@ final class AuthViewController: UIViewController {
         let webViewController = WebViewViewController()
         webViewController.delegate = self
         navigationController?.pushViewController(webViewController, animated: true)
-    }
-}
-
-//MARK: - SegueToWebView
-
-extension AuthViewController {
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        guard segue.identifier == "ShowWebView" else {return}
-        guard let destinationVC = segue.destination as? WebViewViewController else {return}
-        destinationVC.delegate = self
     }
 }
 
