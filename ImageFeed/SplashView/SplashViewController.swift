@@ -16,8 +16,7 @@ final class SplashViewController: UIViewController, AuthViewControllerDelegate {
         if OAuth2TokenStorage.token == "" {
             presentAuthViewController()
         } else {
-            ProfileResult.shared.delegate = self
-            ProfileResult.shared.fetchProfile()
+            switchToTabBarController()
         }
     }
     
@@ -79,15 +78,6 @@ extension SplashViewController {
 extension SplashViewController {
     func didRecieveBearerToken() {
         dismiss(animated: true)
-        ProfileResult.shared.delegate = self
-        ProfileResult.shared.fetchProfile()
-    }
-}
-
-//MARK: - ProfileResultDelegate
-
-extension SplashViewController: ProfileResultDelegate {
-    func didRecieveProfile() {
         switchToTabBarController()
     }
 }

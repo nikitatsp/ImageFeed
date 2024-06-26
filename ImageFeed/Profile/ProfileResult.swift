@@ -5,9 +5,10 @@ protocol ProfileResultDelegate: AnyObject {
 }
 
 final class ProfileResult {
+    let didChangeNotification = Notification.Name(rawValue: "ProfileProviderDidChange")
+    
     static let shared = ProfileResult()
     var profile: PublicProfile?
-    weak var delegate: ProfileResultDelegate?
     private init() {}
     
     func fetchProfile() {
@@ -38,13 +39,15 @@ final class ProfileResult {
         request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
         
         NetworkManager.shared.fetch(request: request) { [weak self] result in
+            guard let self else {return}
             switch result {
             case .success(let data):
                 do {
                     let profile = try JSONDecoder().decode(PublicProfile.self, from: data)
                     ProfileResult.shared.profile = profile
                     DispatchQueue.main.async {
-                        self?.delegate?.didRecieveProfile()
+                        NotificationCenter.default.post(name: self.didChangeNotification, object: self)
+                        print("post Notification")
                     }
                 } catch {
                     print(error.localizedDescription)

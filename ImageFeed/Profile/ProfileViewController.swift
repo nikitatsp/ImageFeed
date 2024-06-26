@@ -13,13 +13,8 @@ class ProfileViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = UIColor(named: "YP Black")
-        guard let profile = ProfileResult.shared.profile else {return}
-        configureImageView(imageView: imageProfileView, image: nil, imageUrl: profile.profileImage.large)
-        configureLabel(label: nameLabel, text: profile.name, font: UIFont.systemFont(ofSize: 23, weight: .bold), textColor: .ypWhite)
-        configureLabel(label: nickNameLabel, text: "@\(profile.username)", font: UIFont.systemFont(ofSize: 13), textColor: .ypGray)
-        configureLabel(label: statusLabel, text: profile.bio, font: UIFont.systemFont(ofSize: 13), textColor: .ypWhite)
-        configureButton(button: exitButton, imageButton: UIImage(named: "ExitButton"))
-        setContstraints()
+        observe()
+        ProfileResult.shared.fetchProfile()
     }
     
     override func viewDidLayoutSubviews() {
@@ -80,7 +75,23 @@ class ProfileViewController: UIViewController {
         ])
     }
     
-    private func setCornerRadius(element: UIView) {
+    private func observe() {
+        print("get notification")
+        NotificationCenter.default.addObserver(self, selector: #selector(reloadData), name: ProfileResult.shared.didChangeNotification, object: nil)
+    }
+    
+    @objc private func reloadData() {
+        guard let profile = ProfileResult.shared.profile else {return}
+        configureImageView(imageView: imageProfileView, image: nil, imageUrl: profile.profileImage.large)
+        configureLabel(label: nameLabel, text: profile.name, font: UIFont.systemFont(ofSize: 23, weight: .bold), textColor: .ypWhite)
+        configureLabel(label: nickNameLabel, text: "@\(profile.username)", font: UIFont.systemFont(ofSize: 13), textColor: .ypGray)
+        configureLabel(label: statusLabel, text: profile.bio, font: UIFont.systemFont(ofSize: 13), textColor: .ypWhite)
+        configureButton(button: exitButton, imageButton: UIImage(named: "ExitButton"))
         
+        setContstraints()
+    }
+    
+    deinit {
+        NotificationCenter.default.removeObserver(self, name: ProfileResult.shared.didChangeNotification, object: nil)
     }
 }
