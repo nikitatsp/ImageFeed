@@ -20,14 +20,14 @@ final class SplashViewController: UIViewController, AuthViewControllerDelegate {
         }
     }
     
-    func configureImageView(imageView: UIImageView) {
+    private func configureImageView(imageView: UIImageView) {
         let image = UIImage(named: "StartLogo")
         imageView.image = image
         view.addSubview(imageView)
         imageView.translatesAutoresizingMaskIntoConstraints = false
     }
     
-    func setConstraints() {
+    private func setConstraints() {
         NSLayoutConstraint.activate([
             imageView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             imageView.centerYAnchor.constraint(equalTo: view.centerYAnchor)

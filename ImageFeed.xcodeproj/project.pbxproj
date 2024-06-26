@@ -28,6 +28,7 @@
 		4AD0CED92C27276F0082FE20 /* Kingfisher in Frameworks */ = {isa = PBXBuildFile; productRef = 4AD0CED82C27276F0082FE20 /* Kingfisher */; };
 		4AD0CEDB2C272AB90082FE20 /* ProfileModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4AD0CEDA2C272AB90082FE20 /* ProfileModels.swift */; };
 		4ADC61382C2A0B9C0083AAC0 /* KeychainAccess in Frameworks */ = {isa = PBXBuildFile; productRef = 4ADC61372C2A0B9C0083AAC0 /* KeychainAccess */; };
+		4AE6E5D02C2C491D00AB07D3 /* SkeletonView in Frameworks */ = {isa = PBXBuildFile; productRef = 4AE6E5CF2C2C491D00AB07D3 /* SkeletonView */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -58,6 +59,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4AE6E5D02C2C491D00AB07D3 /* SkeletonView in Frameworks */,
 				4AD0CED92C27276F0082FE20 /* Kingfisher in Frameworks */,
 				4AD0CED22C24A6510082FE20 /* ProgressHUD in Frameworks */,
 				4ADC61382C2A0B9C0083AAC0 /* KeychainAccess in Frameworks */,
@@ -201,6 +203,7 @@
 				4AD0CED12C24A6510082FE20 /* ProgressHUD */,
 				4AD0CED82C27276F0082FE20 /* Kingfisher */,
 				4ADC61372C2A0B9C0083AAC0 /* KeychainAccess */,
+				4AE6E5CF2C2C491D00AB07D3 /* SkeletonView */,
 			);
 			productName = ImageFeed;
 			productReference = 4A8249C12BE689CA0058FACF /* ImageFeed.app */;
@@ -234,6 +237,7 @@
 				4AD0CED02C24A6510082FE20 /* XCRemoteSwiftPackageReference "ProgressHUD" */,
 				4AD0CED72C27276F0082FE20 /* XCRemoteSwiftPackageReference "Kingfisher" */,
 				4ADC61362C2A0B9C0083AAC0 /* XCRemoteSwiftPackageReference "KeychainAccess" */,
+				4AE6E5CE2C2C491D00AB07D3 /* XCRemoteSwiftPackageReference "SkeletonView" */,
 			);
 			productRefGroup = 4A8249C22BE689CA0058FACF /* Products */;
 			projectDirPath = "";
@@ -525,6 +529,14 @@
 				kind = branch;
 			};
 		};
+		4AE6E5CE2C2C491D00AB07D3 /* XCRemoteSwiftPackageReference "SkeletonView" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/Juanpe/SkeletonView";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.31.0;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -542,6 +554,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 4ADC61362C2A0B9C0083AAC0 /* XCRemoteSwiftPackageReference "KeychainAccess" */;
 			productName = KeychainAccess;
+		};
+		4AE6E5CF2C2C491D00AB07D3 /* SkeletonView */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 4AE6E5CE2C2C491D00AB07D3 /* XCRemoteSwiftPackageReference "SkeletonView" */;
+			productName = SkeletonView;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
