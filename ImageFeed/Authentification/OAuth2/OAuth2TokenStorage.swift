@@ -12,7 +12,7 @@ struct OAuth2TokenStorage {
                 guard let token else {return ""}
                 return token
             } catch {
-                print(error.localizedDescription)
+                print("OAuth2TokenStorage/token: error with get token: \(error.localizedDescription)")
                 return ""
             }
         }
@@ -21,7 +21,7 @@ struct OAuth2TokenStorage {
                 try keychain.set(newValue, key: "bearerToken")
             }
             catch {
-                print(error.localizedDescription)
+                print("OAuth2TokenStorage/token: error with set token: \(error.localizedDescription)")
             }
         }
     }

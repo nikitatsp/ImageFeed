@@ -38,6 +38,7 @@ final class WebViewViewController: UIViewController {
     
     private func loadAuthView() {
         guard var urlComponents = URLComponents(string: WebViewConstants.unsplashAuthorizeURLString) else {
+            print("WebViewViewController/loadAuthView: urlError: urlScheme is nil")
             return
         }
         
@@ -49,6 +50,7 @@ final class WebViewViewController: UIViewController {
         ]
         
         guard let url = urlComponents.url else {
+            print("WebViewViewController/loadAuthView: urlComponentsError: parametres is nil")
             return
         }
         

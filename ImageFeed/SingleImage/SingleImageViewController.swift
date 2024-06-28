@@ -1,6 +1,6 @@
 import UIKit
 
-class SingleImageViewController: UIViewController {
+final class SingleImageViewController: UIViewController {
     
     private var scrollView = UIScrollView()
     private var imageView = UIImageView()

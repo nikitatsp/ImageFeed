@@ -2,7 +2,7 @@ import UIKit
 import ProgressHUD
 
 protocol AuthViewControllerDelegate: AnyObject {
-    func didRecieveBearerToken()
+    func didRecieveBearerToken(token: String, vc: AuthViewController)
 }
 
 final class AuthViewController: UIViewController {
@@ -62,21 +62,24 @@ extension AuthViewController: WebViewViewControllerDelegate {
         loginButton.isEnabled = false
         ProgressHUD.animate()
         OAuth2Service.shared.fetchOAuthToken(code: code) { [weak self] result in
-            switch result{
-            case .success(let token):
-                OAuth2TokenStorage.token = token
-                ProgressHUD.dismiss()
-                self?.delegate?.didRecieveBearerToken()
-                self?.loginButton.isEnabled = true
-            case .failure(let error):
-                print(error.localizedDescription)
-                ProgressHUD.dismiss()
-                let alertController = UIAlertController(title: "Ошибка", message: error.localizedDescription, preferredStyle: .alert)
-                let alertAction = UIAlertAction(title: "Попробовать еще раз", style: .default) {_ in 
-                    self?.loginButton.isEnabled = true
+            guard let self else {return}
+            DispatchQueue.main.async {
+                switch result{
+                case .success(let token):
+                    OAuth2TokenStorage.token = token
+                    ProgressHUD.dismiss()
+                    self.loginButton.isEnabled = true
+                    self.delegate?.didRecieveBearerToken(token: token, vc: self)
+                case .failure(let error):
+                    print("AuthViewController/webViewViewController(didAuthenticateWithCode): fetchTokenError\(error.localizedDescription)")
+                    ProgressHUD.dismiss()
+                    let alertController = UIAlertController(title: "Что-то пошло не так(", message: "Не удалось войти в систему", preferredStyle: .alert)
+                    let alertAction = UIAlertAction(title: "Ок", style: .default) {_ in
+                        self.loginButton.isEnabled = true
+                    }
+                    alertController.addAction(alertAction)
+                    self.present(alertController, animated: true)
                 }
-                alertController.addAction(alertAction)
-                self?.present(alertController, animated: true)
             }
         }
     }

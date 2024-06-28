@@ -1,7 +1,8 @@
 import UIKit
 
-final class SplashViewController: UIViewController, AuthViewControllerDelegate {
+final class SplashViewController: UIViewController {
     private let imageView = UIImageView()
+    private var shouldPresentAuthViewController = true
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -13,10 +14,13 @@ final class SplashViewController: UIViewController, AuthViewControllerDelegate {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         
-        if OAuth2TokenStorage.token == "" {
-            presentAuthViewController()
-        } else {
-            switchToTabBarController()
+        if shouldPresentAuthViewController {
+            if OAuth2TokenStorage.token == "" {
+                presentAuthViewController()
+            } else {
+                let token = OAuth2TokenStorage.token
+                fetcProfile(token: token)
+            }
         }
     }
     
@@ -64,20 +68,51 @@ extension SplashViewController {
 //MARK: - SegueToAuth
 
 extension SplashViewController {
-    func presentAuthViewController() {
+    private func presentAuthViewController() {
         let authVC = AuthViewController()
         authVC.delegate = self
         let navigationController = UINavigationController(rootViewController: authVC)
         navigationController.modalPresentationStyle = .fullScreen
+        shouldPresentAuthViewController = false
         present(navigationController, animated: true)
+    }
+}
+
+//MARK: - FetchProfile
+
+extension SplashViewController {
+    
+    private func fetcProfile(token: String) {
+        ProfileService.shared.fetchProfile(token: token) { [weak self] result in
+            DispatchQueue.main.async {
+                switch result {
+                case .success(let profile):
+                    ProfileImageService.shared.fetchProfileImageURL(token: token, username: profile.userName) { [weak self] result in
+                        DispatchQueue.main.async {
+                            switch result {
+                            case .success(_):
+                                self?.switchToTabBarController()
+                            case .failure(let error):
+                                print("SplashViewController/fetcProfile: ошибка получения imageURL: \(error.localizedDescription)")
+                                self?.presentAuthViewController()
+                            }
+                        }
+                    }
+                case .failure(let error):
+                    print("SplashViewController/fetcProfile: ошибка получения профиля: \(error.localizedDescription)")
+                    self?.presentAuthViewController()
+                }
+            }
+        }
     }
 }
 
 //MARK: - AuthViewControllerDelegate
 
-extension SplashViewController {
-    func didRecieveBearerToken() {
+extension SplashViewController: AuthViewControllerDelegate {
+    
+    func didRecieveBearerToken(token: String, vc: AuthViewController) {
         dismiss(animated: true)
-        switchToTabBarController()
+        fetcProfile(token: token)
     }
 }

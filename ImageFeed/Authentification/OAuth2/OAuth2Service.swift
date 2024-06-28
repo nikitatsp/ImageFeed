@@ -8,6 +8,7 @@ final class OAuth2Service {
     
     private func makeOAuthTokenRequest(code: String) -> URLRequest? {
         guard var urlComponents = URLComponents(string: "https://unsplash.com/oauth/token") else {
+            print("OAuth2Service/makeOAuthTokenRequest: url scheme is nil")
             return nil
         }
         
@@ -20,6 +21,7 @@ final class OAuth2Service {
         ]
         
         guard let url = urlComponents.url else {
+            print("OAuth2Service/makeOAuthTokenRequest: url with parametres is nil")
             return nil
         }
         
@@ -43,25 +45,24 @@ final class OAuth2Service {
         lastCode = code
         guard let request = makeOAuthTokenRequest(code: code) else {
             handler(.failure(NetworkError.requestError))
+            print("OAuth2Service/fetchOAuthToken: invalid url")
             return
         }
         
         task = NetworkManager.shared.fetch(request: request, completion: { result in
-            switch result {
-            case .success(let data):
-                do {
-                    let model = try JSONDecoder().decode(JsonBearerTokenModel.self, from: data)
-                    let token = model.accessToken
-                    DispatchQueue.main.async {
+            DispatchQueue.main.async {
+                switch result {
+                case .success(let data):
+                    do {
+                        let model = try JSONDecoder().decode(JsonBearerTokenModel.self, from: data)
+                        let token = model.accessToken
                         handler(.success(token))
-                    }
-                } catch {
-                    DispatchQueue.main.async {
+                    } catch {
+                        print("OAuth2Service/fetchOAuthToken: error with parse: \(error.localizedDescription)")
                         handler(.failure(error))
                     }
-                }
-            case .failure(let error):
-                DispatchQueue.main.async {
+                case .failure(let error):
+                    print("OAuth2Service/fetchOAuthToken: error with fetch: \(error.localizedDescription)")
                     handler(.failure(error))
                 }
             }
