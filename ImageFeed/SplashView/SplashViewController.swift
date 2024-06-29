@@ -87,11 +87,12 @@ extension SplashViewController {
             DispatchQueue.main.async {
                 switch result {
                 case .success(let profile):
+                    self?.switchToTabBarController()
                     ProfileImageService.shared.fetchProfileImageURL(token: token, username: profile.userName) { [weak self] result in
                         DispatchQueue.main.async {
                             switch result {
                             case .success(_):
-                                self?.switchToTabBarController()
+                                print("SplashViewController: fetcProfile: Image loaded successfully")
                             case .failure(let error):
                                 print("SplashViewController/fetcProfile: ошибка получения imageURL: \(error.localizedDescription)")
                                 self?.presentAuthViewController()

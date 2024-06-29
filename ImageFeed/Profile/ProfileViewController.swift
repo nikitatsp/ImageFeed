@@ -8,7 +8,7 @@ final class ProfileViewController: UIViewController {
     private let nickNameLabel = UILabel()
     private let statusLabel = UILabel()
     private let exitButton = UIButton()
-    
+    private var shouldUpdateImageView = true
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -97,9 +97,10 @@ extension ProfileViewController {
         NotificationCenter.default.addObserver(forName: ProfileImageService.shared.didChangeNotification, object: nil, queue: .main) { [weak self] notification in
             guard let self else {return}
             self.configureImageView(imageView: self.imageProfileView, imageUrl: ProfileImageService.shared.avatarURL)
+            shouldUpdateImageView = false
         }
         
-        if let imageURL = ProfileImageService.shared.avatarURL {
+        if let imageURL = ProfileImageService.shared.avatarURL, shouldUpdateImageView {
             configureImageView(imageView: self.imageProfileView, imageUrl: imageURL)
         }
     }
