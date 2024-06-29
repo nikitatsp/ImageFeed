@@ -1,12 +1,13 @@
 import UIKit
+import ProgressHUD
 
 protocol AuthViewControllerDelegate: AnyObject {
-    func didRecieveBearerToken()
+    func didRecieveBearerToken(token: String, vc: AuthViewController)
 }
 
 final class AuthViewController: UIViewController {
     
-    weak var delegate: AuthViewControllerDelegate? = nil
+    weak var delegate: AuthViewControllerDelegate?
     private let loginButton = UIButton()
     private let logoImageView = UIImageView()
     
@@ -47,17 +48,9 @@ final class AuthViewController: UIViewController {
     }
     
     @objc private func didTappedLoginButton() {
-        performSegue(withIdentifier: "ShowWebView", sender: nil)
-    }
-}
-
-//MARK: - SegueToWebView
-
-extension AuthViewController {
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        guard segue.identifier == "ShowWebView" else {return}
-        guard let destinationVC = segue.destination as? WebViewViewController else {return}
-        destinationVC.delegate = self
+        let webViewController = WebViewViewController()
+        webViewController.delegate = self
+        navigationController?.pushViewController(webViewController, animated: true)
     }
 }
 
@@ -65,22 +58,33 @@ extension AuthViewController {
 
 extension AuthViewController: WebViewViewControllerDelegate {
     func webViewViewController(_ vc: WebViewViewController, didAuthenticateWithCode code: String) {
+        navigationController?.popViewController(animated: true)
+        loginButton.isEnabled = false
+        ProgressHUD.animate()
         OAuth2Service.shared.fetchOAuthToken(code: code) { [weak self] result in
-            switch result{
-            case .success(let token):
-                OAuth2TokenStorage.token = token
-//                self?.navigationController?.popViewController(animated: true)
-                self?.delegate?.didRecieveBearerToken()
-            case .failure(let error):
-                print(error.localizedDescription)
-                self?.navigationController?.popViewController(animated: true)
-                let alertController = UIAlertController(title: "Ошибка", message: error.localizedDescription, preferredStyle: .alert)
-                let alertAction = UIAlertAction(title: "Попробовать еще раз", style: .default)
+            guard let self else {return}
+            DispatchQueue.main.async {
+                switch result {
+                case .success(let token):
+                    OAuth2TokenStorage.token = token
+                    ProgressHUD.dismiss()
+                    self.loginButton.isEnabled = true
+                    self.delegate?.didRecieveBearerToken(token: token, vc: self)
+                case .failure(let error):
+                    print("AuthViewController/webViewViewController(didAuthenticateWithCode): fetchTokenError\(error.localizedDescription)")
+                    ProgressHUD.dismiss()
+                    let alertController = UIAlertController(title: "Что-то пошло не так(", message: "Не удалось войти в систему", preferredStyle: .alert)
+                    let alertAction = UIAlertAction(title: "Ок", style: .default) {_ in
+                        self.loginButton.isEnabled = true
+                    }
+                    alertController.addAction(alertAction)
+                    self.present(alertController, animated: true)
+                }
             }
         }
     }
     
-    func webViewViewControllerDidCancel(_ vc: WebViewViewController) {
+    func webViewViewControllerDidCancel() {
         navigationController?.popViewController(animated: true)
     }
 }

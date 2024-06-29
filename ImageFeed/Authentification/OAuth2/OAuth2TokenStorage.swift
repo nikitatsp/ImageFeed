@@ -1,16 +1,28 @@
 import UIKit
+import KeychainAccess
 
 struct OAuth2TokenStorage {
-    
+    static private let keychain = Keychain(service: "com.imagefeed.keys")
     private init() {}
     
     static var token: String {
         get {
-            guard let string = UserDefaults.standard.string(forKey: "BearerToken") else {return ""}
-            return string
+            do {
+                let token = try keychain.get("bearerToken")
+                guard let token else {return ""}
+                return token
+            } catch {
+                print("OAuth2TokenStorage/token: error with get token: \(error.localizedDescription)")
+                return ""
+            }
         }
         set {
-            UserDefaults.standard.set(newValue, forKey: "BearerToken")
+            do {
+                try keychain.set(newValue, key: "bearerToken")
+            }
+            catch {
+                print("OAuth2TokenStorage/token: error with set token: \(error.localizedDescription)")
+            }
         }
     }
 }

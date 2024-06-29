@@ -1,11 +1,14 @@
 import UIKit
 
-struct OAuth2Service {
+final class OAuth2Service {
     static let shared = OAuth2Service()
     private init() {}
+    private var lastCode: String?
+    private var task: URLSessionTask?
     
     private func makeOAuthTokenRequest(code: String) -> URLRequest? {
         guard var urlComponents = URLComponents(string: "https://unsplash.com/oauth/token") else {
+            print("OAuth2Service/makeOAuthTokenRequest: url scheme is nil")
             return nil
         }
         
@@ -18,6 +21,7 @@ struct OAuth2Service {
         ]
         
         guard let url = urlComponents.url else {
+            print("OAuth2Service/makeOAuthTokenRequest: url with parametres is nil")
             return nil
         }
         
@@ -28,24 +32,44 @@ struct OAuth2Service {
     }
     
     func fetchOAuthToken(code: String, handler: @escaping(_ result: Result<String, Error>) -> Void) {
+        assert(Thread.isMainThread)
+        
+        if task != nil {
+            if code == lastCode {
+                return
+            } else {
+                task?.cancel()
+            }
+        }
+        
+        lastCode = code
         guard let request = makeOAuthTokenRequest(code: code) else {
             handler(.failure(NetworkError.requestError))
+            print("OAuth2Service/fetchOAuthToken: invalid url")
             return
         }
         
-        OAuthTokenResponseBody.shared.decodeData(request: request) { result in
-            switch result {
-            case .success(let model):
-                let token = model.accessToken
-                DispatchQueue.main.async {
-                    handler(.success(token))
-                }
-            case .failure(let error):
-                DispatchQueue.main.async {
+        task = NetworkManager.shared.fetch(request: request, completion: { result in
+            DispatchQueue.main.async {
+                switch result {
+                case .success(let data):
+                    do {
+                        let model = try JSONDecoder().decode(JsonBearerTokenModel.self, from: data)
+                        let token = model.accessToken
+                        handler(.success(token))
+                    } catch {
+                        print("OAuth2Service/fetchOAuthToken: error with parse: \(error.localizedDescription)")
+                        handler(.failure(error))
+                    }
+                case .failure(let error):
+                    print("OAuth2Service/fetchOAuthToken: error with fetch: \(error.localizedDescription)")
                     handler(.failure(error))
                 }
             }
-        }
+        })
+        task?.resume()
     }
 }
+
+
 

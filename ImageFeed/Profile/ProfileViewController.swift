@@ -1,45 +1,69 @@
 import UIKit
+import Kingfisher
 
-class ProfileViewController: UIViewController {
+final class ProfileViewController: UIViewController {
     
     private let imageProfileView = UIImageView()
     private let nameLabel = UILabel()
     private let nickNameLabel = UILabel()
     private let statusLabel = UILabel()
     private let exitButton = UIButton()
+    private var shouldUpdateImageView = true
     
-
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        configureImageView(imageView: imageProfileView, image: UIImage(named: "MockPhotoProfile"))
-        configureLabel(label: nameLabel, text: "Екатерина Новикова", font: UIFont.systemFont(ofSize: 23, weight: .bold), textColor: .ypWhite)
-        configureLabel(label: nickNameLabel, text: "@ekaterina_nov", font: UIFont.systemFont(ofSize: 13), textColor: .ypGray)
-        configureLabel(label: statusLabel, text: "Hello, world!", font: UIFont.systemFont(ofSize: 13), textColor: .ypWhite)
+        view.backgroundColor = UIColor(named: "YP Black")
+        setupViews()
+        addObserver()
+        configureLabel(label: nameLabel, text: ProfileService.shared.profile?.name, font: UIFont.systemFont(ofSize: 23, weight: .bold), textColor: .ypWhite)
+        configureLabel(label: nickNameLabel, text: ProfileService.shared.profile?.loginName, font: UIFont.systemFont(ofSize: 13), textColor: .ypGray)
+        configureLabel(label: statusLabel, text: ProfileService.shared.profile?.bio, font: UIFont.systemFont(ofSize: 13), textColor: .ypWhite)
         configureButton(button: exitButton, imageButton: UIImage(named: "ExitButton"))
         setContstraints()
     }
     
-    private func configureImageView(imageView: UIImageView, image: UIImage?) {
-        imageView.image = image
-        view.addSubview(imageView)
-        imageView.translatesAutoresizingMaskIntoConstraints = false
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        setCornerRadius()
     }
     
-    private func configureLabel(label: UILabel, text: String, font: UIFont, textColor: UIColor) {
+    private func setCornerRadius() {
+        imageProfileView.layer.cornerRadius = imageProfileView.bounds.size.width / 2
+        imageProfileView.clipsToBounds = true
+        
+    }
+    
+    private func setupViews() {
+        view.addSubview(imageProfileView)
+        imageProfileView.translatesAutoresizingMaskIntoConstraints = false
+        
+        view.addSubview(nameLabel)
+        nameLabel.translatesAutoresizingMaskIntoConstraints = false
+        
+        view.addSubview(nickNameLabel)
+        nickNameLabel.translatesAutoresizingMaskIntoConstraints = false
+        
+        view.addSubview(statusLabel)
+        statusLabel.translatesAutoresizingMaskIntoConstraints = false
+        
+        view.addSubview(exitButton)
+        exitButton.translatesAutoresizingMaskIntoConstraints = false
+    }
+    
+    private func configureImageView(imageView: UIImageView, imageUrl: String?) {
+        guard let imageUrl else {return}
+        let url = URL(string: imageUrl)
+        imageView.kf.setImage(with: url)
+    }
+    
+    private func configureLabel(label: UILabel, text: String?, font: UIFont, textColor: UIColor) {
         label.text = text
         label.font = font
         label.textColor = textColor
-        
-        view.addSubview(label)
-        label.translatesAutoresizingMaskIntoConstraints = false
     }
     
     private func configureButton(button: UIButton, imageButton: UIImage?) {
         button.setImage(imageButton, for: .normal)
-        
-        view.addSubview(button)
-        button.translatesAutoresizingMaskIntoConstraints = false
     }
     
     private func setContstraints() {
@@ -63,5 +87,21 @@ class ProfileViewController: UIViewController {
             exitButton.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -24),
             exitButton.centerYAnchor.constraint(equalTo: imageProfileView.centerYAnchor)
         ])
+    }
+}
+
+//MARK: - Observer
+
+extension ProfileViewController {
+    func addObserver() {
+        NotificationCenter.default.addObserver(forName: ProfileImageService.shared.didChangeNotification, object: nil, queue: .main) { [weak self] notification in
+            guard let self else {return}
+            self.configureImageView(imageView: self.imageProfileView, imageUrl: ProfileImageService.shared.avatarURL)
+            shouldUpdateImageView = false
+        }
+        
+        if let imageURL = ProfileImageService.shared.avatarURL, shouldUpdateImageView {
+            configureImageView(imageView: self.imageProfileView, imageUrl: imageURL)
+        }
     }
 }

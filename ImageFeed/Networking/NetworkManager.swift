@@ -21,17 +21,19 @@ struct NetworkManager {
     static let shared = NetworkManager()
     private init() {}
     
-    func fetch(request: URLRequest, completion: @escaping(_ result: Result<Data, Error>) -> Void) {
+    func fetch(request: URLRequest, completion: @escaping(_ result: Result<Data, Error>) -> Void) -> URLSessionTask {
         
-        URLSession.shared.dataTask(with: request) { data, response, error in
+        let task = URLSession.shared.dataTask(with: request) { data, response, error in
             if let error {
                 completion(.failure(error))
+                print("Network manager: eror exists")
                 return
             }
             
             if let response = response as? HTTPURLResponse,
                 response.statusCode < 200 || response.statusCode >= 300 {
                 completion(.failure(NetworkError.codeError(response.statusCode)))
+                print("Network manager/fetch: error in response: \(NetworkError.codeError(response.statusCode).localizedDescription)")
                 return
             }
 
@@ -39,7 +41,10 @@ struct NetworkManager {
                 completion(.success(data))
             } else {
                 completion(.failure(NetworkError.noData))
+                print("Network manager/fetch: error in data: \(NetworkError.noData.localizedDescription)")
+                return
             }
-        }.resume()
+        }
+        return task
     }
 }
